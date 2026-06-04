@@ -2334,7 +2334,7 @@ ADD COLUMN `reset_token_hash` VARCHAR(255) NULL,
 ADD COLUMN `reset_token_expire` DATETIME NULL;
 ```
 
-### 20. Important Instructions:
+### 20. myAdmin login:
 
 > Now the old myAdmin login credentials won't work so we need to do the following: Update acc_email in accounts table, use a working email address Update acc_pass in accounts table: use any online php compiler to run the following code: ```echo password_hash("1@#Domain1@#", PASSWORD_DEFAULT);``` after running this code, it will ouput a string something like: ```$2y$10$FHwzny8j8B3.Pzxnejv1AexAqu/4JLAhYkNc2t3Oevz88zCdZ1i1.``` copy this and paste it to acc_pass column, Now try log in to myAdmin.
 
@@ -2355,3 +2355,9 @@ Welcome to <strong><a href="https://domainname.com">Site Name</a></strong>
 ```
 
 > Replace the **https://domainname.com** and **Site Name** with real values
+
+### 22. Important Instructions:
+* In myAdmin/email/ directory check if there is a folder named **excel**, delete this folder.
+* Inside public_html/ do not keep folders like "old", "new", "backup" etc those are predictable. Use different names for folders which are meaningful like v1, v2 or similar.
+* Do not keep any zip file unnecessarily inside public_html/.
+* If there is cron files inside public_html/, make sure those are accessible by cli only.
