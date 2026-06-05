@@ -62,6 +62,9 @@ $functions->adminFooter();
 Use the following recommended Apache configuration.
 
 ```
+Options -Indexes
+ServerSignature Off
+
 RewriteEngine On
 RewriteBase /
 
@@ -2005,6 +2008,54 @@ if (isset($mailArray['reset_link'])) {
     $temp = $mailArray['reset_link'];
     $msg = str_ireplace("{{reset_link}}", $temp, $msg);
 }
+```
+> Also Replace setFormToken( and getFormToken functions with the following functions:
+
+```
+    public function setFormToken($TokenName, $echo = true)
+    {
+        if (empty($_SESSION['tokens'][$TokenName . 'Token'])) {
+            $_SESSION['tokens'][$TokenName . 'Token'] = bin2hex(random_bytes(32));
+        }
+    
+        $token = $_SESSION['tokens'][$TokenName . 'Token'];
+    
+        $temp = '<input type="hidden" name="' . htmlspecialchars($TokenName . 'Token', ENT_QUOTES, 'UTF-8') . '" value="' . htmlspecialchars($token, ENT_QUOTES, 'UTF-8') . '" />';
+    
+        if ($echo) {
+            echo $temp;
+        } else {
+            return $temp;
+        }
+    }
+
+    public function getFormToken($TokenName, $autoCheckRecommended = true, $echo = true)
+    {
+        $sessionKey = $TokenName . 'Token';
+    
+        if (empty($_SESSION['tokens'][$sessionKey])) {
+            return false;
+        }
+    
+        $token = $_SESSION['tokens'][$sessionKey];
+    
+        if ($autoCheckRecommended) {
+            if (
+                isset($_POST[$sessionKey]) &&
+                hash_equals($token, $_POST[$sessionKey])
+            ) {
+                return true;
+            }
+    
+            return false;
+        }
+    
+        if ($echo) {
+            echo htmlspecialchars($token, ENT_QUOTES, 'UTF-8');
+        } else {
+            return $token;
+        }
+    }
 ```
 
 ### 16. Update _models/traits/admin_permission.php
